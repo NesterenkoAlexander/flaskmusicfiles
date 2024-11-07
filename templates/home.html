@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Обработчик Музыкальных Файлов</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Обработчик Музыкальных Файлов</h1>
+        <p>Добро пожаловать в наше приложение для обработки аудиофайлов. Мы используем библиотеку <strong>wave</strong>, и поддерживаем только файлы в формате <strong>WAV</strong>.</p>
+        <div class="buttons">
+            <a href="{{ url_for('cut') }}" class="btn">Вырезать отрывок</a>
+            <a href="{{ url_for('merge') }}" class="btn">Склеить файлы</a>
+            <a href="{{ url_for('add_silence') }}" class="btn">Добавить паузу</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Склеить файлы - Обработчик Музыкальных Файлов</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Склеить файлы</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="audio-file-1">Первый файл:</label>
+            <input type="file" id="audio-file-1" name="audio-file-1" accept=".wav" required>
+            <label for="audio-file-2">Второй файл:</label>
+            <input type="file" id="audio-file-2" name="audio-file-2" accept=".wav" required>
+            <input type="submit" value="Склеить и скачать">
+        </form>
+        <a href="{{ url_for('home') }}" class="back-link">← На главную</a>
+    </div>
+</body>
+</html>
