@@ -11,11 +11,44 @@
         <form method="POST" enctype="multipart/form-data">
             <label for="audio-file-1">Первый файл:</label>
             <input type="file" id="audio-file-1" name="audio-file-1" accept=".wav" required>
+            <audio id="audio-player-1" controls style="margin-top: 20px; display: none;">
+                Ваш браузер не поддерживает воспроизведение аудио.
+            </audio>
             <label for="audio-file-2">Второй файл:</label>
             <input type="file" id="audio-file-2" name="audio-file-2" accept=".wav" required>
+            <audio id="audio-player-2" controls style="margin-top: 20px; display: none;">
+                Ваш браузер не поддерживает воспроизведение аудио.
+            </audio>
             <input type="submit" value="Склеить и скачать">
         </form>
         <a href="{{ url_for('home') }}" class="back-link">← На главную</a>
     </div>
+    <script>
+        document.getElementById('audio-file-1').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const audioPlayer1 = document.getElementById('audio-player-1');
+            if (file) {
+                audioPlayer1.src = URL.createObjectURL(file);
+                audioPlayer1.style.display = 'block';
+                audioPlayer1.load();
+            } else {
+                audioPlayer1.style.display = 'none';
+                audioPlayer1.src = '';
+            }
+        });
+    
+        document.getElementById('audio-file-2').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const audioPlayer2 = document.getElementById('audio-player-2');
+            if (file) {
+                audioPlayer2.src = URL.createObjectURL(file);
+                audioPlayer2.style.display = 'block';
+                audioPlayer2.load();
+            } else {
+                audioPlayer2.style.display = 'none';
+                audioPlayer2.src = '';
+            }
+        });
+    </script>    
 </body>
 </html>

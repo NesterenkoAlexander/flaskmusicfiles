@@ -11,6 +11,9 @@
         <form method="POST" enctype="multipart/form-data">
             <label for="audio-file">Выберите файл:</label>
             <input type="file" id="audio-file" name="audio-file" accept=".wav" required>
+            <audio id="audio-player" controls style="margin-top: 20px; display: none;">
+                Ваш браузер не поддерживает воспроизведение аудио.
+            </audio>
             <label for="start-time">Начало (минута:секунда)</label>
             <input type="text" id="start-time" name="start-time" placeholder="0:00" pattern="\d+:\d{2}" required>
             <label for="end-time">Конец (минута:секунда)</label>
@@ -19,5 +22,19 @@
         </form>
         <a href="{{ url_for('home') }}" class="back-link">← На главную</a>
     </div>
+    <script>
+        document.getElementById('audio-file').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const audioPlayer = document.getElementById('audio-player');
+            if (file) {
+                audioPlayer.src = URL.createObjectURL(file);
+                audioPlayer.style.display = 'block';
+                audioPlayer.load();
+            } else {
+                audioPlayer.style.display = 'none';
+                audioPlayer.src = '';
+            }
+        });
+    </script>    
 </body>
 </html>
