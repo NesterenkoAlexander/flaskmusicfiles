@@ -2,9 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, session, s
 import wave
 import os
 import json
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Необходимо для работы сессий
+app.secret_key = os.urandom(24)  # Необходимо для работы сессий
 
 UPLOAD_FOLDER = "uploads"
 PROCESSED_FOLDER = "processed"
@@ -64,7 +65,8 @@ def register():
         if username in users:
             error = 'Пользователь уже существует.'
             return render_template('register.html', error=error)
-        users[username] = password  # В реальном приложении нужно хранить хеш пароля
+        hashed_password = generate_password_hash(password)
+        users[username] = hashed_password
         save_users(users)
         return redirect(url_for('login'))
     return render_template('register.html')
@@ -75,7 +77,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         users = load_users()
-        if username in users and users[username] == password:
+        if username in users and check_password_hash(users[username], password):
             session['username'] = username
             next_page = request.args.get('next')
             return redirect(next_page or url_for('home'))
