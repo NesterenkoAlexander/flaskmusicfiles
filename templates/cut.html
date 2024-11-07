@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Вырезать отрывок - Обработчик Музыкальных Файлов</title>
+    <title>Вырезать отрывок</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
@@ -11,9 +11,9 @@
         <form method="POST" enctype="multipart/form-data">
             <label for="audio-file">Выберите файл:</label>
             <input type="file" id="audio-file" name="audio-file" accept=".wav" required>
-            <label for="start-time">Начало (минута:секунда):</label>
+            <label for="start-time">Начало (минута:секунда)</label>
             <input type="text" id="start-time" name="start-time" placeholder="0:00" pattern="\d+:\d{2}" required>
-            <label for="end-time">Конец (минута:секунда):</label>
+            <label for="end-time">Конец (минута:секунда)</label>
             <input type="text" id="end-time" name="end-time" placeholder="0:05" pattern="\d+:\d{2}" required>
             <input type="submit" value="Вырезать и скачать">
         </form>

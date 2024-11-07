@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Добавить паузу - Обработчик Музыкальных Файлов</title>
+    <title>Добавить паузу</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
@@ -11,7 +11,7 @@
         <form method="POST" enctype="multipart/form-data">
             <label for="audio-file">Выберите файл:</label>
             <input type="file" id="audio-file" name="audio-file" accept=".wav" required>
-            <label for="duration">Длительность паузы (минута:секунда):</label>
+            <label for="duration">Длительность паузы (минута:секунда)</label>
             <input type="text" id="duration" name="duration" placeholder="0:05" pattern="\d+:\d{2}" required>
             <label for="position">Положение паузы:</label>
             <select id="position" name="position">

@@ -8,7 +8,7 @@ PROCESSED_FOLDER = "processed"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['PROCESSED_FOLDER'] = PROCESSED_FOLDER
 
-# Ensure folders exist
+# Создаем папки, если они не существуют
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 
@@ -38,28 +38,28 @@ def cut():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filepath)
 
-            # Open the audio file
+            # Открытие аудиофайла
             with wave.open(filepath, 'rb') as audio:
                 frame_rate = audio.getframerate()
                 total_frames = audio.getnframes()
                 total_duration = total_frames / frame_rate
 
-                # Convert time strings to seconds
+                # Преобразование времени в секунды
                 start_time = time_to_seconds(start_time_str)
                 end_time = time_to_seconds(end_time_str)
 
-                # Ensure end time does not exceed total duration
+                # Ограничение конечного времени длительностью файла
                 if end_time > total_duration:
                     end_time = total_duration
 
                 start_frame = int(start_time * frame_rate)
                 end_frame = int(end_time * frame_rate)
 
-                # Set up the new audio
+                # Вырезание отрывка
                 audio.setpos(start_frame)
                 frames = audio.readframes(end_frame - start_frame)
 
-                # Save the processed audio
+                # Сохранение обработанного файла
                 output_path = os.path.join(app.config['PROCESSED_FOLDER'], "processed_" + file.filename)
                 with wave.open(output_path, 'wb') as output_audio:
                     output_audio.setparams(audio.getparams())
@@ -79,7 +79,7 @@ def merge():
             file1.save(filepath1)
             file2.save(filepath2)
 
-            # Open both audio files
+            # Открытие обоих аудиофайлов
             with wave.open(filepath1, 'rb') as audio1, wave.open(filepath2, 'rb') as audio2:
                 if audio1.getparams() != audio2.getparams():
                     return "Файлы должны иметь одинаковые параметры (каналы, разрядность, частота дискретизации).", 400
@@ -87,10 +87,10 @@ def merge():
                 frames1 = audio1.readframes(audio1.getnframes())
                 frames2 = audio2.readframes(audio2.getnframes())
 
-                # Merge the audio frames
+                # Склейка фреймов
                 merged_frames = frames1 + frames2
 
-                # Save the merged audio
+                # Сохранение объединенного файла
                 output_path = os.path.join(app.config['PROCESSED_FOLDER'], "merged_" + file1.filename)
                 with wave.open(output_path, 'wb') as output_audio:
                     output_audio.setparams(audio1.getparams())
@@ -111,21 +111,21 @@ def add_silence():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filepath)
 
-            # Open the audio file
+            # Открытие аудиофайла
             with wave.open(filepath, 'rb') as audio:
                 params = audio.getparams()
                 frames = audio.readframes(audio.getnframes())
 
-                # Generate silence
+                # Генерация тишины
                 silence_frames = generate_silence(duration, params.framerate, params.nchannels, params.sampwidth)
 
-                # Add silence to the beginning or end
+                # Добавление тишины в начало или конец
                 if position == 'start':
                     new_frames = silence_frames + frames
                 else:
                     new_frames = frames + silence_frames
 
-                # Save the new audio file
+                # Сохранение нового файла с добавленной паузой
                 output_path = os.path.join(app.config['PROCESSED_FOLDER'], "silence_" + file.filename)
                 with wave.open(output_path, 'wb') as output_audio:
                     output_audio.setparams(params)
