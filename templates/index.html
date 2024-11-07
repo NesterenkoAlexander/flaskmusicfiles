@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Обработчик Музыкальных Файлов</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Обработчик Музыкальных Файлов</h1>
+
+        <!-- Cut Audio Form -->
+        <form id="cut-form" method="POST" enctype="multipart/form-data" action="{{ url_for('process') }}">
+            <h2>Вырезать отрывок</h2>
+            <label for="audio-file">Выберите файл:</label>
+            <input type="file" id="audio-file" name="audio-file" accept="audio/*" required>
+            <label for="start-time">Начало (минута:секунда):</label>
+            <input type="text" id="start-time" name="start-time" placeholder="0:00" pattern="\d+:\d{2}" required>
+            <label for="end-time">Конец (минута:секунда):</label>
+            <input type="text" id="end-time" name="end-time" placeholder="0:05" pattern="\d+:\d{2}" required>
+            <input type="submit" value="Вырезать и скачать">
+        </form>
+
+        <!-- Merge Audio Form -->
+        <form id="merge-form" method="POST" enctype="multipart/form-data" action="{{ url_for('merge') }}">
+            <h2>Склеить два файла</h2>
+            <label for="audio-file-1">Первый файл:</label>
+            <input type="file" id="audio-file-1" name="audio-file-1" accept="audio/*" required>
+            <label for="audio-file-2">Второй файл:</label>
+            <input type="file" id="audio-file-2" name="audio-file-2" accept="audio/*" required>
+            <input type="submit" value="Склеить и скачать">
+        </form>
+
+        <!-- Add Silence Form -->
+        <form id="silence-form" method="POST" enctype="multipart/form-data" action="{{ url_for('add_silence') }}">
+            <h2>Добавить паузу</h2>
+            <label for="audio-file">Выберите файл:</label>
+            <input type="file" id="audio-file" name="audio-file" accept="audio/*" required>
+            <label for="duration">Длительность паузы (минута:секунда):</label>
+            <input type="text" id="duration" name="duration" placeholder="0:05" pattern="\d+:\d{2}" required>
+            <label for="position">Положение паузы:</label>
+            <select id="position" name="position">
+                <option value="start">В начало</option>
+                <option value="end">В конец</option>
+            </select>
+            <input type="submit" value="Добавить паузу и скачать">
+        </form>
+    </div>
+</body>
+</html>
