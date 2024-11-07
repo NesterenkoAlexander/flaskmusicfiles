@@ -1,10 +1,15 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, send_file
 import wave
 import os
+import json
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Необходимо для работы сессий
+
 UPLOAD_FOLDER = "uploads"
 PROCESSED_FOLDER = "processed"
+USERS_FILE = "users.json"  # Файл для хранения данных пользователей
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['PROCESSED_FOLDER'] = PROCESSED_FOLDER
 
@@ -23,11 +28,69 @@ def generate_silence(duration, framerate, n_channels, sampwidth):
     silence = (b'\x00' * sampwidth) * num_frames * n_channels
     return silence
 
+def load_users():
+    """Load users from JSON file."""
+    if os.path.exists(USERS_FILE):
+        with open(USERS_FILE, 'r') as f:
+            return json.load(f)
+    else:
+        return {}
+
+def save_users(users):
+    """Save users to JSON file."""
+    with open(USERS_FILE, 'w') as f:
+        json.dump(users, f)
+
+def login_required(f):
+    """Decorator to check if user is logged in."""
+    from functools import wraps
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/')
 def home():
     return render_template('home.html')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        users = load_users()
+        if username in users:
+            error = 'Пользователь уже существует.'
+            return render_template('register.html', error=error)
+        users[username] = password  # В реальном приложении нужно хранить хеш пароля
+        save_users(users)
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        users = load_users()
+        if username in users and users[username] == password:
+            session['username'] = username
+            next_page = request.args.get('next')
+            return redirect(next_page or url_for('home'))
+        else:
+            error = 'Неправильное имя пользователя или пароль.'
+            return render_template('login.html', error=error)
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('home'))
+
 @app.route('/cut', methods=['GET', 'POST'])
+@login_required
 def cut():
     if request.method == 'POST':
         file = request.files['audio-file']
@@ -69,6 +132,7 @@ def cut():
     return render_template('cut.html')
 
 @app.route('/merge', methods=['GET', 'POST'])
+@login_required
 def merge():
     if request.method == 'POST':
         file1 = request.files['audio-file-1']
@@ -100,6 +164,7 @@ def merge():
     return render_template('merge.html')
 
 @app.route('/add_silence', methods=['GET', 'POST'])
+@login_required
 def add_silence():
     if request.method == 'POST':
         file = request.files['audio-file']

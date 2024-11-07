@@ -7,6 +7,9 @@
 </head>
 <body>
     <div class="container">
+        <div class="auth-info">
+            <p>Вы вошли как {{ session['username'] }} | <a href="{{ url_for('logout') }}">Выйти</a></p>
+        </div>        
         <h1>Вырезать отрывок</h1>
         <form method="POST" enctype="multipart/form-data">
             <label for="audio-file">Выберите файл:</label>

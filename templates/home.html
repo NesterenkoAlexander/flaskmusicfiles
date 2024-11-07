@@ -7,15 +7,27 @@
 </head>
 <body>
     <div class="container">
+        <div class="auth-links">
+            {% if 'username' in session %}
+                <p>Вы вошли как {{ session['username'] }} | <a href="{{ url_for('logout') }}">Выйти</a></p>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn">Войти</a>
+                <a href="{{ url_for('register') }}" class="btn">Зарегистрироваться</a>
+            {% endif %}
+        </div>        
         <h1>Обработчик Музыкальных Файлов</h1>
         <p>Добро пожаловать в Обработчик Музыкальных Файлов! Наше приложение предоставляет удобные инструменты для работы с аудиофайлами в формате <strong>WAV</strong>.</p>
         
         <p>Вы можете легко склеивать несколько файлов, вырезать нужные отрывки или добавлять паузы в начало и конец ваших записей. Используя библиотеку <strong>wave</strong>, мы гарантируем высокое качество обработки и простоту использования.</p>
-        <div class="buttons">
-            <a href="{{ url_for('cut') }}" class="btn">Вырезать отрывок</a>
-            <a href="{{ url_for('merge') }}" class="btn">Склеить файлы</a>
-            <a href="{{ url_for('add_silence') }}" class="btn">Добавить паузу</a>
-        </div>
+        {% if 'username' in session %}
+    <div class="buttons">
+        <a href="{{ url_for('cut') }}" class="btn">Вырезать отрывок</a>
+        <a href="{{ url_for('merge') }}" class="btn">Склеить файлы</a>
+        <a href="{{ url_for('add_silence') }}" class="btn">Добавить паузу</a>
+    </div>
+{% else %}
+    <p>Пожалуйста, войдите или зарегистрируйтесь, чтобы использовать функции.</p>
+{% endif %}
     </div>
 </body>
 </html>

@@ -96,3 +96,21 @@ input[type="submit"]:hover {
 .back-link:hover {
     text-decoration: underline;
 }
+
+.auth-links {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.auth-links .btn {
+    margin-left: 10px;
+}
+
+.auth-info {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.auth-info p {
+    margin: 0;
+}

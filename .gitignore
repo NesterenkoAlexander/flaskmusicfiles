@@ -9,3 +9,5 @@ __pycache__/
 # системные файлы
 .DS_Store
 Thumbs.db
+
+users.json
